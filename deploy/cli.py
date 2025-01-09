@@ -73,6 +73,17 @@ def main(portainer_url, portainer_username, portainer_password, portainer_stack,
 
     click.echo(click.style(" done", fg="green"))
 
+    # Get stack's environment variables
+    click.echo(click.style("Getting target stack environment variables...", fg="yellow"), nl=False)
+    stack = requests.get(f"{portainer_url}/stacks/{stack_id}", headers=headers)
+    if stacks.status_code != 200:
+        click.echo(f"\nHTTP {auth.status_code} error while trying to get Portainer stack detail")
+        sys.exit(1)
+
+    env = stack.json()["Env"]
+    if env is None:
+        env = []
+
     # Update stack
     click.echo(click.style("Requesting stack update...", fg="yellow"), nl=False)
     r = requests.put(
@@ -80,7 +91,7 @@ def main(portainer_url, portainer_username, portainer_password, portainer_stack,
         headers=headers,
         json={
             "StackFileContent": stackfilecontent,
-            "Env": stack_env,
+            "Env": list({ e["name"]: e for e in [*stack_env, *env] }.values()), # get unique env list by name,
             "Prune": False
         }
     )
