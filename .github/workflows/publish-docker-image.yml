@@ -13,6 +13,10 @@ on:
   release:
     types: [published]
 
+env:
+  REGISTRY: docker.io
+  IMAGE_NAME: danieljuvito/gitlab-portainer-deploy
+
 jobs:
   push_to_registry:
     name: Push Docker image to Docker Hub
