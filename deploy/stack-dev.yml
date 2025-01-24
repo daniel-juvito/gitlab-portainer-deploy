@@ -1,0 +1,38 @@
+version: "3.7"
+services:
+  api-olacms-dev:
+    image: mygitlab.indosatooredoo.com:5050/cco/group-digitalization/digital-touchpoint/ola-cms-backend:57332573
+    networks:
+      - backend-dev
+    environment:
+      - OLACMS_SCHEDULER=true
+      - OLACMS_LOG_LEVEL=debug
+      - OLACMS_LOG_SQL=${LOG_SQL}
+      - OLACMS_DB_HOST=10.34.52.151
+      - OLACMS_DB_PORT=3306
+      - OLACMS_DB_NAME=oa_appdb
+      - OLACMS_DB_USER=gouser
+      - OLACMS_DB_PASS=backend@2019
+      - OLACMS_DB_MAX_IDLE=5
+      - OLACMS_DB_MAX_OPEN=10
+      - OLACMS_DB_MAX_LIFETIME=5
+      - OLACMS_MAIL_AUTH=true
+      - OLACMS_SERVER_ERROR_MAIL_TO=Daniel Juvito <daniel.juvito@ioh.co.id>
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 5s
+        order: start-first
+      restart_policy:
+        condition: on-failure
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9001/readiness" ]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+networks:
+  backend-dev:
+    external: true

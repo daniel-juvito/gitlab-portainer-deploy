@@ -80,6 +80,8 @@ def main(portainer_url, portainer_username, portainer_password, portainer_stack,
         click.echo(f"\nHTTP {auth.status_code} error while trying to get Portainer stack detail")
         sys.exit(1)
 
+    click.echo(click.style(" done", fg="green"))
+
     env = stack.json()["Env"]
     if env is None:
         env = []
