@@ -8,6 +8,7 @@ setup(
     install_requires=[
         "click",
         "requests",
+        "urllib3==1.26.15",
     ],
     entry_points="""
         [console_scripts]
